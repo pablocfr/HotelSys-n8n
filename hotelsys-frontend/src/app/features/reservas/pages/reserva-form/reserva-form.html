@@ -1,0 +1,155 @@
+<div class="container-fluid">
+  <h2 class="mb-4">{{ pageTitle }}</h2>
+  <form [formGroup]="reservaForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-lg-4">
+        <!-- Sección Cliente -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span>1. Datos del Cliente</span>
+            <button type="button" class="btn btn-sm btn-outline-primary" (click)="abrirModalCliente()">
+              <i class="bi bi-person-plus-fill"></i> Crear Cliente
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Escriba para buscar cliente..." formControlName="clienteBusqueda">
+              <button class="btn btn-outline-secondary" type="button" (click)="buscarClientes(true)">Listar</button>
+            </div>
+            <ul class="list-group mt-2" *ngIf="clienteBusquedaResultados.length > 0">
+              <li class="list-group-item list-group-item-action" *ngFor="let cliente of clienteBusquedaResultados" (click)="seleccionarCliente(cliente)">
+                {{ cliente.nombreCompleto }} ({{ cliente.numeroDocumento }})
+              </li>
+            </ul>
+            <div *ngIf="clienteSeleccionado" class="alert alert-info mt-3">
+              <strong>Cliente Seleccionado:</strong><br> {{ clienteSeleccionado.nombreCompleto }}
+            </div>
+          </div>
+        </div>
+        <!-- ... (el resto del HTML de Fechas no cambia) ... -->
+        <div class="card shadow-sm">
+          <div class="card-header">2. Fechas de la Estancia</div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="fechaCheckIn" class="form-label">Fecha de Check-In</label>
+              <input type="date" id="fechaCheckIn" class="form-control" formControlName="fechaCheckIn">
+            </div>
+            <div>
+              <label for="fechaCheckOut" class="form-label">Fecha de Check-Out</label>
+              <input type="date" id="fechaCheckOut" class="form-control" formControlName="fechaCheckOut">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="row">
+          <!-- Sección Habitaciones -->
+          <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+              <div class="card-header">3. Agregar Habitaciones</div>
+              <div class="card-body">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Buscar por N° o tipo..." formControlName="habitacionBusqueda" (keyup)="buscarHabitaciones()">
+                   <button class="btn btn-outline-secondary" type="button" (click)="buscarHabitaciones()">Listar Disponibles</button>
+                </div>
+                <ul class="list-group mt-2" *ngIf="habitacionesDisponibles.length > 0">
+                  <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" *ngFor="let hab of habitacionesDisponibles">
+                    N° {{ hab.numero }} - {{ hab.tipoHabitacion.descripcion }}
+                    <button type="button" class="btn btn-sm btn-success" (click)="agregarHabitacion(hab)">Agregar</button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- Sección Productos -->
+          <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+              <div class="card-header">4. Agregar Productos/Servicios</div>
+              <div class="card-body">
+                 <div class="input-group">
+                   <input type="text" class="form-control" placeholder="Escriba para buscar producto..." formControlName="productoBusqueda">
+                   <button class="btn btn-outline-secondary" type="button" (click)="buscarProductos(true)">Listar</button>
+                </div>
+                <ul class="list-group mt-2" *ngIf="productosDisponibles.length > 0">
+                   <li class="list-group-item list-group-item-action" *ngFor="let prod of productosDisponibles">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <span>{{ prod.nombreProducto }}</span>
+                      <div class="d-flex">
+                        <input #cantidad type="number" value="1" min="1" [max]="prod.stock" class="form-control form-control-sm" style="width: 60px;">
+                        <button type="button" class="btn btn-sm btn-success ms-2" (click)="agregarProducto(prod, cantidad)">Agregar</button>
+                      </div>
+                    </div>
+                   </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ... (el resto del HTML de Resumen y botones no cambia) ... -->
+        <div class="card shadow-sm">
+          <div class="card-header bg-primary text-white">Resumen de la Reserva</div>
+          <div class="card-body">
+            <h6>Habitaciones Seleccionadas ({{ nochesCalculadas }} {{ nochesCalculadas === 1 ? 'noche' : 'noches' }})</h6>
+            <table class="table table-sm">
+              <tbody>
+                <tr *ngFor="let hab of habitacionesSeleccionadas">
+                  <td>N° {{ hab.numero }} - {{ hab.tipoHabitacion.descripcion }}</td>
+                  <td class="text-end">{{ hab.tipoHabitacion.precioBaseNoche | currency:'S/ ' }} x noche</td>
+                  <td class="text-end">
+                    <button type="button" class="btn btn-sm btn-outline-danger" (click)="quitarHabitacion(hab.id)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="habitacionesSeleccionadas.length === 0">
+                  <td colspan="3" class="text-center text-muted">Aún no se han agregado habitaciones.</td>
+                </tr>
+              </tbody>
+            </table>
+            <h6 class="mt-4">Productos/Servicios Adicionales</h6>
+            <table class="table table-sm">
+              <tbody>
+                <tr *ngFor="let prod of productosSeleccionados">
+                  <td>{{ prod.nombreProducto }}</td>
+                  <td class="d-flex align-items-center">
+                     <input type="number" [(ngModel)]="prod.cantidad" (ngModelChange)="onCantidadProductoChange()"
+                            [ngModelOptions]="{standalone: true}" 
+                            min="1" [max]="prod.stock + prod.cantidad" class="form-control form-control-sm" style="width: 60px;">
+                     <span class="ms-2">x {{ prod.precio | currency:'S/ ' }}</span>
+                  </td>
+                  <td class="text-end">{{ (prod.precio * prod.cantidad) | currency:'S/ ' }}</td>
+                  <td class="text-end">
+                    <button type="button" class="btn btn-sm btn-outline-danger" (click)="quitarProducto(prod.id)">
+                       <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+                 <tr *ngIf="productosSeleccionados.length === 0">
+                  <td colspan="4" class="text-center text-muted">Aún no se han agregado productos.</td>
+                </tr>
+              </tbody>
+            </table>
+            <hr>
+            <div class="row justify-content-end text-end">
+              <div class="col-md-5">
+                <p class="mb-1"><strong>Subtotal:</strong> {{ subtotal | currency:'S/ ' }}</p>
+                <div class="d-flex align-items-center justify-content-end mb-2">
+                  <label for="descuento" class="form-label me-2 mb-0"><strong>Descuento:</strong></label>
+                  <input type="number" id="descuento" class="form-control form-control-sm w-50" formControlName="descuento">
+                </div>
+                <h4 class="text-danger"><strong>Total: {{ total | currency:'S/ ' }}</strong></h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary me-2" routerLink="/app/reservas">Cancelar</button>
+          <button type="submit" class="btn btn-success">
+            {{ isEditMode ? 'Guardar Cambios' : 'Confirmar y Crear Reserva' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+  <app-cliente-modal (clienteCreado)="onClienteCreado($event)"></app-cliente-modal>
+</div>

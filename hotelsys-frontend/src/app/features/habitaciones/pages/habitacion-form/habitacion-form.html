@@ -1,0 +1,48 @@
+<div class="container-fluid">
+  <h2 class="mb-4">{{ pageTitle }}</h2>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <form [formGroup]="habitacionForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="numero" class="form-label">Número de Habitación</label>
+            <input type="text" id="numero" class="form-control" formControlName="numero">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="tipoHabitacionId" class="form-label">Tipo de Habitación</label>
+            <select id="tipoHabitacionId" class="form-select" formControlName="tipoHabitacionId">
+              <option [value]="null" disabled>Seleccione...</option>
+              <option *ngFor="let tipo of tiposHabitacion" [value]="tipo.id">{{ tipo.descripcion }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="estadoHabitacionId" class="form-label">Estado Actual</label>
+            <select id="estadoHabitacionId" class="form-select" formControlName="estadoHabitacionId">
+              <option [value]="null" disabled>Seleccione...</option>
+              <option *ngFor="let estado of estadosHabitacion" [value]="estado.id">{{ estado.descripcion }}</option>
+            </select>
+          </div>
+          <div class="col-md-6 mb-3 align-self-center">
+            <div class="form-check mt-4">
+              <input class="form-check-input" type="checkbox" id="requiereLimpieza" formControlName="requiereLimpieza">
+              <label class="form-check-label" for="requiereLimpieza">
+                ¿Requiere Limpieza?
+              </label>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+          {{ errorMessage }}
+        </div>
+        <div class="mt-4">
+          <button type="submit" class="btn btn-success me-2" [disabled]="habitacionForm.invalid">Guardar</button>
+          <a routerLink="/app/habitaciones" class="btn btn-secondary">Volver a la Lista</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

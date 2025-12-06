@@ -1,0 +1,75 @@
+<div class="container-fluid">
+  <h2 class="mb-4">Gestión de Habitaciones</h2>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="row g-3 mb-3 align-items-center">
+        <div class="col-md-6">
+          <input type="text" class="form-control" placeholder="Buscar por número o tipo..."
+                 [(ngModel)]="terminoBusqueda" (keyup.enter)="buscar()">
+        </div>
+        <div class="col-md-6 d-flex justify-content-start justify-content-md-end">
+          <button class="btn btn-secondary me-2" (click)="buscar()">
+            <i class="bi bi-search"></i> Buscar
+          </button>
+          <button class="btn btn-outline-secondary me-2" (click)="limpiarBusqueda()">
+            <i class="bi bi-x-lg"></i> Limpiar búsqueda
+          </button>
+          <button class="btn btn-primary" (click)="crearHabitacion()">
+            <i class="bi bi-plus-lg"></i> Nueva Habitación
+          </button>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>Número</th>
+              <th>Tipo</th>
+              <th>Estado</th>
+              <th>Limpieza Requerida</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let habitacion of habitacionesFiltradas">
+              <td>{{ habitacion.numero }}</td>
+              <td>{{ habitacion.tipoHabitacion.descripcion }}</td>
+              <td>
+                <span class="badge" 
+                      [ngClass]="{
+                        'bg-success': habitacion.estadoHabitacion.descripcion === 'Disponible',
+                        'bg-danger': habitacion.estadoHabitacion.descripcion === 'Ocupada',
+                        'bg-secondary': habitacion.estadoHabitacion.descripcion === 'Mantenimiento'
+                      }">
+                  <i [ngClass]="{
+                        'bi bi-check-circle-fill': habitacion.estadoHabitacion.descripcion === 'Disponible',
+                        'bi bi-x-circle-fill': habitacion.estadoHabitacion.descripcion === 'Ocupada',
+                        'bi bi-tools': habitacion.estadoHabitacion.descripcion === 'Mantenimiento'
+                      }"></i>
+                  {{ habitacion.estadoHabitacion.descripcion }}
+                </span>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="habitacion.requiereLimpieza ? 'bg-warning text-dark' : 'bg-info text-dark'">
+                   <i [ngClass]="habitacion.requiereLimpieza ? 'bi bi-exclamation-triangle-fill' : 'bi bi-check-lg'"></i>
+                  {{ habitacion.requiereLimpieza ? 'Sí' : 'No' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-warning me-2" (click)="editarHabitacion(habitacion.id)">
+                  <i class="bi bi-pencil-fill"></i> Editar
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="desactivarHabitacion(habitacion.id)">
+                  <i class="bi bi-trash-fill"></i> Desactivar
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="habitacionesFiltradas.length === 0">
+                <td colspan="5" class="text-center">No se encontraron habitaciones.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

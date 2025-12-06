@@ -1,0 +1,53 @@
+<div class="container-fluid">
+  <h2 class="mb-4">{{ pageTitle }}</h2>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="nombreCompleto" class="form-label">Nombre Completo o Razón Social</label>
+            <input type="text" id="nombreCompleto" class="form-control" formControlName="nombreCompleto"
+                   [ngClass]="{ 'is-invalid': f['nombreCompleto'].invalid && f['nombreCompleto'].touched }">
+            <app-validation-messages [control]="f['nombreCompleto']"></app-validation-messages>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="tipoDocumentoId" class="form-label">Tipo de Documento</label>
+            <select id="tipoDocumentoId" class="form-select" formControlName="tipoDocumentoId"
+                    [ngClass]="{ 'is-invalid': f['tipoDocumentoId'].invalid && f['tipoDocumentoId'].touched }">
+              <option [value]="''" disabled>Seleccione...</option>
+              <option *ngFor="let tipo of tiposDocumento" [value]="tipo.id">{{ tipo.descripcion }}</option>
+            </select>
+            <app-validation-messages [control]="f['tipoDocumentoId']"></app-validation-messages>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="numeroDocumento" class="form-label">Número de Documento</label>
+            <input type="text" id="numeroDocumento" class="form-control" formControlName="numeroDocumento"
+                   [ngClass]="{ 'is-invalid': f['numeroDocumento'].invalid && f['numeroDocumento'].touched }">
+            <app-validation-messages [control]="f['numeroDocumento']"></app-validation-messages>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" class="form-control" formControlName="email"
+                   [ngClass]="{ 'is-invalid': f['email'].invalid && f['email'].touched }">
+            <app-validation-messages [control]="f['email']"></app-validation-messages>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input type="tel" id="telefono" class="form-control" formControlName="telefono">
+          </div>
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+          {{ errorMessage }}
+        </div>
+        <div class="mt-4">
+          <button type="submit" class="btn btn-success me-2" [disabled]="clienteForm.invalid">Guardar</button>
+          <a routerLink="/app/clientes" class="btn btn-secondary">Volver a la Lista</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

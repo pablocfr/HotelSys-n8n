@@ -1,0 +1,30 @@
+<div class="container text-center">
+  <div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
+    <div class="container-fluid py-5">
+      <img src="/assets/logo g.png" alt="HotelSys Logo" class="mb-4" style="max-height: 120px;">
+      <h1 class="display-5 fw-bold">Bienvenido a HotelSys</h1>
+      <p class="col-md-8 fs-4 mx-auto">La solución inteligente para la gestión de su hotel. Administre sus operaciones de forma centralizada y eficiente.</p>
+    </div>
+  </div>
+
+  <div class="row align-items-md-stretch">
+    <div class="col-md-4 mb-4">
+      <div class="h-100 p-5 text-white bg-dark rounded-3 card-hover" (click)="navegarA('reservas')">
+        <h2><i class="bi bi-calendar-check-fill me-2"></i>Gestionar Reservas</h2>
+        <p>Visualice, cree y administre todas las reservas de sus clientes.</p>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="h-100 p-5 bg-light border rounded-3 card-hover" (click)="navegarA('clientes')">
+        <h2><i class="bi bi-people-fill me-2"></i>Administrar Clientes</h2>
+        <p>Consulte y mantenga actualizada su base de datos de huéspedes.</p>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="h-100 p-5 text-white bg-secondary rounded-3 card-hover" (click)="navegarA('habitaciones')">
+        <h2><i class="bi bi-door-open-fill me-2"></i>Control de Habitaciones</h2>
+        <p>Gestione el estado, tipo y limpieza de todo su inventario.</p>
+      </div>
+    </div>
+  </div>
+</div>

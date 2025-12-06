@@ -1,0 +1,58 @@
+<div class="modal fade" id="crearClienteModal" tabindex="-1" aria-labelledby="crearClienteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="crearClienteModalLabel">Registrar Nuevo Cliente</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="modalNombreCompleto" class="form-label">Nombre Completo o Razón Social</label>
+              <input type="text" id="modalNombreCompleto" class="form-control" formControlName="nombreCompleto"
+                     [ngClass]="{ 'is-invalid': f['nombreCompleto'].invalid && f['nombreCompleto'].touched }">
+              <app-validation-messages [control]="f['nombreCompleto']"></app-validation-messages>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="modalTipoDocumentoId" class="form-label">Tipo de Documento</label>
+              <select id="modalTipoDocumentoId" class="form-select" formControlName="tipoDocumentoId"
+                      [ngClass]="{ 'is-invalid': f['tipoDocumentoId'].invalid && f['tipoDocumentoId'].touched }">
+                <option [value]="''" disabled>Seleccione...</option>
+                <option *ngFor="let tipo of tiposDocumento" [value]="tipo.id">{{ tipo.descripcion }}</option>
+              </select>
+              <app-validation-messages [control]="f['tipoDocumentoId']"></app-validation-messages>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="modalNumeroDocumento" class="form-label">Número de Documento</label>
+              <input type="text" id="modalNumeroDocumento" class="form-control" formControlName="numeroDocumento"
+                     [ngClass]="{ 'is-invalid': f['numeroDocumento'].invalid && f['numeroDocumento'].touched }">
+              <app-validation-messages [control]="f['numeroDocumento']"></app-validation-messages>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="modalEmail" class="form-label">Email</label>
+              <input type="email" id="modalEmail" class="form-control" formControlName="email"
+                     [ngClass]="{ 'is-invalid': f['email'].invalid && f['email'].touched }">
+              <app-validation-messages [control]="f['email']"></app-validation-messages>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="modalTelefono" class="form-label">Teléfono</label>
+              <input type="tel" id="modalTelefono" class="form-control" formControlName="telefono">
+            </div>
+          </div>
+        </form>
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+          {{ errorMessage }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="clienteForm.invalid">Guardar Cliente</button>
+      </div>
+    </div>
+  </div>
+</div>

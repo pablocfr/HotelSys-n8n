@@ -1,0 +1,32 @@
+<div class="container-fluid">
+  <h2 class="mb-4">{{ pageTitle }}</h2>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <form [formGroup]="productoForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <label for="nombreProducto" class="form-label">Nombre del Producto</label>
+            <input type="text" id="nombreProducto" class="form-control" formControlName="nombreProducto">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="precio" class="form-label">Precio</label>
+            <input type="number" id="precio" class="form-control" formControlName="precio">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="stock" class="form-label">Stock</label>
+            <input type="number" id="stock" class="form-control" formControlName="stock">
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <button type="submit" class="btn btn-success me-2" [disabled]="productoForm.invalid">Guardar</button>
+          <a routerLink="/app/productos" class="btn btn-secondary">Volver a la Lista</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
