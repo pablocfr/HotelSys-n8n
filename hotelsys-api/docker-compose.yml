@@ -7,14 +7,13 @@ services:
     container_name: mysql_api
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root123
       MYSQL_DATABASE: hotelsys_db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root1234
+      MYSQL_USER: hotelsys_user
+      MYSQL_PASSWORD: hotelsys_pass
     volumes:
       - mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
+      - ./Docker/MySQL/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   api:
     build: .
@@ -26,8 +25,8 @@ services:
       - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hotelsys_db
-      SPRING_DATASOURCE_USERNAME: usuario
-      SPRING_DATASOURCE_PASSWORD: clave
+      SPRING_DATASOURCE_USERNAME: hotelsys_user
+      SPRING_DATASOURCE_PASSWORD: hotelsys_pass
 
 volumes:
   mysql_data:
